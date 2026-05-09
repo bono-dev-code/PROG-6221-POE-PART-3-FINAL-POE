@@ -101,7 +101,8 @@ CybersecurityChatbot-Part3/
 4. Update the connection string with your MySQL username and password:
 
 ```csharp
-private readonly string _connectionString = "server=localhost;port=3306;database=cybersecurity_chatbot;uid=root;pwd=@Bb0760470006;";
+private readonly string connectionString =
+            "server=localhost;port=3306;user=root;password=@Bb0760470006;database=cybersecurity_chatbot;";
 ```
 
 ## How to Run the Project
