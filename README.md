@@ -133,8 +133,11 @@ private readonly string _connectionString = "server=localhost;port=3306;database
 ## Continuous Integration
 This project uses GitHub Actions on Windows to restore and build the WPF project automatically.
 
-## Video Presentation
-Add your unlisted YouTube link here.
+ ## Part 3 releases tags
+- `v1.0 - Task Assistant Implementation`
+- `v1.5 - Database and Quiz Features`
+- `v2.0 - Final Cybersecurity Awareness Chatbot POE`
+
 
 ## License
 This project is for educational purposes only.
