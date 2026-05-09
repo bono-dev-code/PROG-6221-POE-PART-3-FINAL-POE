@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\bneng\\Desktop\\PROG 6221\\Assignment POE\\BONO NONO\\PART 3\\CybersecurityChatbot-Part3\\CybersecurityChatbot.GUI\\CybersecurityChatbot.GUI.csproj": {}
+    "C:\\Users\\bneng\\Documents\\GitHub\\PROG-6221-POE-PART-3-FINAL-POE\\CybersecurityChatbot.GUI\\CybersecurityChatbot.GUI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\bneng\\Desktop\\PROG 6221\\Assignment POE\\BONO NONO\\PART 3\\CybersecurityChatbot-Part3\\CybersecurityChatbot.GUI\\CybersecurityChatbot.GUI.csproj": {
+    "C:\\Users\\bneng\\Documents\\GitHub\\PROG-6221-POE-PART-3-FINAL-POE\\CybersecurityChatbot.GUI\\CybersecurityChatbot.GUI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\bneng\\Desktop\\PROG 6221\\Assignment POE\\BONO NONO\\PART 3\\CybersecurityChatbot-Part3\\CybersecurityChatbot.GUI\\CybersecurityChatbot.GUI.csproj",
+        "projectUniqueName": "C:\\Users\\bneng\\Documents\\GitHub\\PROG-6221-POE-PART-3-FINAL-POE\\CybersecurityChatbot.GUI\\CybersecurityChatbot.GUI.csproj",
         "projectName": "CybersecurityChatbot.GUI",
-        "projectPath": "C:\\Users\\bneng\\Desktop\\PROG 6221\\Assignment POE\\BONO NONO\\PART 3\\CybersecurityChatbot-Part3\\CybersecurityChatbot.GUI\\CybersecurityChatbot.GUI.csproj",
+        "projectPath": "C:\\Users\\bneng\\Documents\\GitHub\\PROG-6221-POE-PART-3-FINAL-POE\\CybersecurityChatbot.GUI\\CybersecurityChatbot.GUI.csproj",
         "packagesPath": "C:\\Users\\bneng\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\bneng\\Desktop\\PROG 6221\\Assignment POE\\BONO NONO\\PART 3\\CybersecurityChatbot-Part3\\CybersecurityChatbot.GUI\\obj\\",
+        "outputPath": "C:\\Users\\bneng\\Documents\\GitHub\\PROG-6221-POE-PART-3-FINAL-POE\\CybersecurityChatbot.GUI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -30,8 +30,7 @@
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net8.0-windows": {
-            "framework": "net8.0-windows7.0",
+          "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {}
           }
@@ -49,8 +48,7 @@
         "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
-        "net8.0-windows": {
-          "framework": "net8.0-windows7.0",
+        "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "dependencies": {
             "MySql.Data": {
