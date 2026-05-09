@@ -1,11 +1,12 @@
 
+
 using System;
 using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("CybersecurityChatbot.GUI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+29eda4b4bb3263245881bc259a7df83824196bab")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+853068f967159e26e4390494877939bbc149ba18")]
 [assembly: System.Reflection.AssemblyProductAttribute("CybersecurityChatbot.GUI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CybersecurityChatbot.GUI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
