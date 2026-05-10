@@ -99,6 +99,14 @@ CybersecurityChatbot-Part3/
 2. Run the SQL script in `Database/setup.sql`.
 3. Open `Services/DatabaseService.cs`.
 4. Update the connection string with your MySQL username and password:
+5. Database prompts 
+## Use your database
+USE cybersecurity_chatbot;
+## Make sure the table is correct
+DESCRIBE Tasks;
+## Viewing task on db
+SELECT * FROM ViewTasks;
+
 
 ```csharp
 private readonly string connectionString =
