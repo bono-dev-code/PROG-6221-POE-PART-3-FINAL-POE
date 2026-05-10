@@ -79,7 +79,7 @@
                     <Button Content="Delete Task" Style="{StaticResource DangerButtonStyle}" Click="DeleteTask_Click"/>
 
                     <TextBlock Text="Task ID" Foreground="White" Margin="0,10,0,6"/>
-                    <TextBox x:Name="TaskIdTextBox" Height="36" Padding="8" Text="1"/>
+                    <TextBox x:Name="TaskIdTextBox" Height="36" Padding="8" ToolTip="Enter Task ID"/>
 
                     <TextBlock Text="Quiz" Foreground="White" FontWeight="Bold" Margin="0,12,0,8"/>
                     <Button Content="Start Quiz" Style="{StaticResource SidebarButtonStyle}" Click="StartQuiz_Click"/>
