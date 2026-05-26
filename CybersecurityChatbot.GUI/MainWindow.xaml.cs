@@ -114,6 +114,15 @@ namespace CybersecurityChatbot.GUI
             _activityLogService.Add("User", $"User name set to {name}.");
         }
 
+                    // This method allows the user to press Enter to set their name
+            private void NameInput_KeyDown(object sender, KeyEventArgs e)
+            {
+                if (e.Key == Key.Enter)
+                {
+                    SetName_Click(sender, e);
+                }
+            }
+
         // Handles clicking the Send button
         private void Send_Click(object sender, RoutedEventArgs e)
         {

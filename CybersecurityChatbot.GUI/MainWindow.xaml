@@ -97,9 +97,10 @@
 
                     <!-- User name input -->
                     <TextBox x:Name="NameInput"
-                             Height="36"
-                             Padding="8"
-                             Text=""/>
+                            Height="36"
+                            Padding="8"
+                            Text=""
+                            KeyDown="NameInput_KeyDown"/>
 
                     <!-- Set user name button -->
                     <Button Content="Set Name"
