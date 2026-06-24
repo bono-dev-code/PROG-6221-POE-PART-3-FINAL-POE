@@ -122,11 +122,12 @@ private readonly string connectionString =
 - MySQL Server
 
 ### Steps
-1. Open the project in Visual Studio.
-2. Restore NuGet packages.
-3. Configure MySQL as explained above.
-4. Build the project.
-5. Run the application.
+1. Download The Zipped Folder & Extract it
+2. Open the project in Visual Studio.
+3. Restore NuGet packages.
+4. Configure MySQL as explained above.
+5. Build the project.
+6. Run the application.
 
 ## Example Commands
 - `Password Safety`
