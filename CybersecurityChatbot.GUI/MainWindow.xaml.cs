@@ -9,7 +9,6 @@ using CybersecurityChatbot.Services;
 
 namespace CybersecurityChatbot.GUI
 {
-    // This is the main window of the WPF chatbot application.
     public partial class MainWindow : Window
     {
         private readonly ChatbotService _chatbotService;
@@ -40,7 +39,6 @@ namespace CybersecurityChatbot.GUI
             {
                 AppendBotMessage("Database connection successful.");
                 _activityLogService.Add("Database", "Connected to MySQL and verified task table.");
-                RefreshTaskGrid();
             }
             else
             {
@@ -202,7 +200,6 @@ namespace CybersecurityChatbot.GUI
                 if (task.ReminderDate.HasValue)
                 {
                     _databaseService.AddTask(task);
-                    RefreshTaskGrid();
 
                     AppendBotMessage($"Task added: {task.Title}. Reminder set for {task.ReminderDate:yyyy-MM-dd}.");
                     _activityLogService.Add("Task", $"Task added: {task.Title}");
@@ -214,7 +211,6 @@ namespace CybersecurityChatbot.GUI
                 }
 
                 int newTaskId = _databaseService.AddTask(task);
-                RefreshTaskGrid();
 
                 _pendingReminderTask = task;
                 _pendingReminderTaskId = newTaskId;
@@ -272,7 +268,6 @@ namespace CybersecurityChatbot.GUI
             if (reminderDate.HasValue)
             {
                 _databaseService.UpdateTaskReminder(_pendingReminderTaskId.Value, reminderDate.Value);
-                RefreshTaskGrid();
 
                 int days = Math.Max(0, (reminderDate.Value.Date - DateTime.Now.Date).Days);
 
@@ -330,7 +325,6 @@ namespace CybersecurityChatbot.GUI
             try
             {
                 _databaseService.AddTask(task);
-                RefreshTaskGrid();
 
                 string reminderText = reminderDate.HasValue
                     ? $" Reminder set for {reminderDate.Value:yyyy-MM-dd}."
@@ -350,19 +344,6 @@ namespace CybersecurityChatbot.GUI
             }
         }
 
-        private void RefreshTaskGrid()
-        {
-            try
-            {
-                TaskDataGrid.ItemsSource = null;
-                TaskDataGrid.ItemsSource = _databaseService.GetTasks();
-            }
-            catch
-            {
-                // Keeps the app from crashing if database is not ready.
-            }
-        }
-
         private void ViewTasks_Click(object sender, RoutedEventArgs e)
         {
             ViewTasksInternal();
@@ -372,74 +353,28 @@ namespace CybersecurityChatbot.GUI
         {
             try
             {
-                RefreshTaskGrid();
-                AppendBotMessage("Tasks loaded. Select a task from the table to complete or delete.");
-                _activityLogService.Add("Task", "Viewed saved tasks.");
+                TaskManagerWindow taskWindow = new TaskManagerWindow(_databaseService, _activityLogService);
+                taskWindow.Owner = this;
+                taskWindow.ShowDialog();
+
+                AppendBotMessage("Task Manager opened. You can view, complete, or delete saved tasks there.");
+                _activityLogService.Add("Task", "Opened Task Manager window.");
             }
             catch (Exception ex)
             {
-                AppendBotMessage("I could not load tasks from the database.");
-                _activityLogService.Add("Error", $"Task load failed: {ex.Message}");
+                AppendBotMessage("I could not open the Task Manager window.");
+                _activityLogService.Add("Error", $"Task Manager failed: {ex.Message}");
             }
-        }
-
-        private bool TryGetSelectedTaskId(out int taskId)
-        {
-            taskId = 0;
-
-            if (TaskDataGrid.SelectedItem is TaskItem selectedTask)
-            {
-                taskId = selectedTask.Id;
-                return true;
-            }
-
-            return false;
         }
 
         private void MarkTaskComplete_Click(object sender, RoutedEventArgs e)
         {
-            if (!TryGetSelectedTaskId(out int taskId))
-            {
-                AppendBotMessage("Please select a task from the table first.");
-                return;
-            }
-
-            try
-            {
-                _databaseService.MarkTaskCompleted(taskId);
-                RefreshTaskGrid();
-
-                AppendBotMessage($"✅ Task #{taskId} marked as completed.");
-                _activityLogService.Add("Task", $"Task #{taskId} marked as completed.");
-            }
-            catch (Exception ex)
-            {
-                AppendBotMessage("I could not mark the task as completed.");
-                _activityLogService.Add("Error", $"Task complete failed: {ex.Message}");
-            }
+            ViewTasksInternal();
         }
 
         private void DeleteTask_Click(object sender, RoutedEventArgs e)
         {
-            if (!TryGetSelectedTaskId(out int taskId))
-            {
-                AppendBotMessage("Please select a task from the table first.");
-                return;
-            }
-
-            try
-            {
-                _databaseService.DeleteTask(taskId);
-                RefreshTaskGrid();
-
-                AppendBotMessage($"🗑️ Task #{taskId} deleted successfully.");
-                _activityLogService.Add("Task", $"Task #{taskId} deleted.");
-            }
-            catch (Exception ex)
-            {
-                AppendBotMessage("I could not delete the task.");
-                _activityLogService.Add("Error", $"Task delete failed: {ex.Message}");
-            }
+            ViewTasksInternal();
         }
 
         private void StartQuiz_Click(object sender, RoutedEventArgs e)
