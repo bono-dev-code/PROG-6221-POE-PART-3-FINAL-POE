@@ -355,7 +355,8 @@ namespace CybersecurityChatbot.GUI
             {
                 TaskManagerWindow taskWindow = new TaskManagerWindow(_databaseService, _activityLogService);
                 taskWindow.Owner = this;
-                taskWindow.ShowDialog();
+
+                taskWindow.Show();
 
                 AppendBotMessage("Task Manager opened. You can view, complete, or delete saved tasks there.");
                 _activityLogService.Add("Task", "Opened Task Manager window.");
