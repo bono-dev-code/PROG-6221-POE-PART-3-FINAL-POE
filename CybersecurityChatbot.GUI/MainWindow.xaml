@@ -11,10 +11,8 @@
         ResizeMode="CanResize"
         Background="#0F172A">
 
-    <!-- Styles used in the application -->
     <Window.Resources>
 
-        <!-- Main sidebar button style -->
         <Style x:Key="SidebarButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="38"/>
             <Setter Property="Margin" Value="0,0,0,8"/>
@@ -23,16 +21,12 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Cursor" Value="Hand"/>
-
-            <!-- Custom button design -->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
                                 CornerRadius="8"
                                 Padding="10">
-
-                            <!-- Displays button text -->
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center"/>
                         </Border>
@@ -41,14 +35,12 @@
             </Setter>
         </Style>
 
-        <!-- Red button style -->
         <Style x:Key="DangerButtonStyle"
                TargetType="Button"
                BasedOn="{StaticResource SidebarButtonStyle}">
             <Setter Property="Background" Value="#DC2626"/>
         </Style>
 
-        <!-- Green button style -->
         <Style x:Key="SuccessButtonStyle"
                TargetType="Button"
                BasedOn="{StaticResource SidebarButtonStyle}">
@@ -57,18 +49,11 @@
 
     </Window.Resources>
 
-    <!-- Main layout grid -->
     <Grid Margin="12">
 
-        <!-- Create two columns -->
         <Grid.ColumnDefinitions>
-
-            <!-- Left sidebar -->
-            <ColumnDefinition Width="250"/>
-
-            <!-- Main chat area -->
+            <ColumnDefinition Width="270"/>
             <ColumnDefinition Width="*"/>
-
         </Grid.ColumnDefinitions>
 
         <!-- LEFT SIDEBAR -->
@@ -78,43 +63,35 @@
                 Padding="14"
                 Margin="0,0,12,0">
 
-            <!-- Makes sidebar scrollable -->
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-
                 <StackPanel>
 
-                    <!-- Sidebar title -->
                     <TextBlock Text="CHATBOT MENU"
                                Foreground="#22D3EE"
                                FontSize="22"
                                FontWeight="Bold"
                                Margin="0,0,0,12"/>
 
-                    <!-- User name label -->
                     <TextBlock Text="Name"
                                Foreground="White"
                                Margin="0,0,0,6"/>
 
-                    <!-- User name input -->
                     <TextBox x:Name="NameInput"
-                            Height="36"
-                            Padding="8"
-                            Text=""
-                            KeyDown="NameInput_KeyDown"/>
+                             Height="36"
+                             Padding="8"
+                             Text=""
+                             KeyDown="NameInput_KeyDown"/>
 
-                    <!-- Set user name button -->
                     <Button Content="Set Name"
                             Style="{StaticResource SidebarButtonStyle}"
                             Margin="0,10,0,14"
                             Click="SetName_Click"/>
 
-                    <!-- Quick topics section -->
                     <TextBlock Text="Quick Topics"
                                Foreground="White"
                                FontWeight="Bold"
                                Margin="0,0,0,8"/>
 
-                    <!-- Quick topic buttons -->
                     <Button Content="Password Safety"
                             Style="{StaticResource SidebarButtonStyle}"
                             Click="QuickTopic_Click"/>
@@ -135,14 +112,44 @@
                             Style="{StaticResource SidebarButtonStyle}"
                             Click="QuickTopic_Click"/>
 
-                    <!-- Task assistant section -->
+                    <!-- Task Assistant -->
                     <TextBlock Text="Task Assistant"
                                Foreground="White"
                                FontWeight="Bold"
                                Margin="0,12,0,8"/>
 
-                    <!-- Task buttons -->
-                    <Button Content="Add Demo Task"
+                    <TextBlock Text="Task Title"
+                               Foreground="White"
+                               Margin="0,0,0,6"/>
+
+                    <TextBox x:Name="TaskTitleTextBox"
+                             Height="36"
+                             Padding="8"
+                             Margin="0,0,0,8"
+                             ToolTip="Example: Review privacy settings"/>
+
+                    <TextBlock Text="Task Description"
+                               Foreground="White"
+                               Margin="0,0,0,6"/>
+
+                    <TextBox x:Name="TaskDescriptionTextBox"
+                             Height="70"
+                             Padding="8"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             VerticalScrollBarVisibility="Auto"
+                             Margin="0,0,0,8"
+                             ToolTip="Write what the user must do"/>
+
+                    <TextBlock Text="Reminder Date Optional"
+                               Foreground="White"
+                               Margin="0,0,0,6"/>
+
+                    <DatePicker x:Name="TaskReminderDatePicker"
+                                Height="36"
+                                Margin="0,0,0,8"/>
+
+                    <Button Content="Add Task"
                             Style="{StaticResource SidebarButtonStyle}"
                             Click="AddTask_Click"/>
 
@@ -150,24 +157,13 @@
                             Style="{StaticResource SidebarButtonStyle}"
                             Click="ViewTasks_Click"/>
 
-                    <Button Content="Mark Task Complete"
+                    <Button Content="Mark Selected Complete"
                             Style="{StaticResource SuccessButtonStyle}"
                             Click="MarkTaskComplete_Click"/>
 
-                    <Button Content="Delete Task"
+                    <Button Content="Delete Selected Task"
                             Style="{StaticResource DangerButtonStyle}"
                             Click="DeleteTask_Click"/>
-
-                    <!-- Task ID label -->
-                    <TextBlock Text="Task ID"
-                               Foreground="White"
-                               Margin="0,10,0,6"/>
-
-                    <!-- Task ID textbox -->
-                    <TextBox x:Name="TaskIdTextBox"
-                             Height="36"
-                             Padding="8"
-                             ToolTip="Enter Task ID"/>
 
                     <!-- Quiz section -->
                     <TextBlock Text="Quiz"
@@ -175,7 +171,6 @@
                                FontWeight="Bold"
                                Margin="0,12,0,8"/>
 
-                    <!-- Quiz buttons -->
                     <Button Content="Start Quiz"
                             Style="{StaticResource SidebarButtonStyle}"
                             Click="StartQuiz_Click"/>
@@ -184,13 +179,11 @@
                             Style="{StaticResource DangerButtonStyle}"
                             Click="QuitQuiz_Click"/>
 
-                    <!-- Logs and memory section -->
                     <TextBlock Text="Logs and Memory"
                                Foreground="White"
                                FontWeight="Bold"
                                Margin="0,12,0,8"/>
 
-                    <!-- Log buttons -->
                     <Button Content="Show Memory"
                             Style="{StaticResource SidebarButtonStyle}"
                             Click="ShowMemory_Click"/>
@@ -203,7 +196,6 @@
                             Style="{StaticResource SidebarButtonStyle}"
                             Click="ClearChat_Click"/>
 
-                    <!-- Help and hints panel -->
                     <Border Background="#1E293B"
                             CornerRadius="10"
                             Padding="10"
@@ -211,12 +203,10 @@
 
                         <StackPanel>
 
-                            <!-- Hint title -->
                             <TextBlock Text="Hints"
                                        Foreground="#67E8F9"
                                        FontWeight="Bold"/>
 
-                            <!-- Example chatbot commands -->
                             <TextBlock Text="• I'm worried about scams"
                                        Foreground="White"
                                        Margin="0,6,0,4"/>
@@ -242,8 +232,9 @@
                             <TextBlock Text="• View tasks"
                                        Foreground="White"/>
 
-                            <TextBlock Text="• Use Task ID to complete/delete tasks"
-                                       Foreground="White"/>
+                            <TextBlock Text="• Select a task from the table to complete/delete"
+                                       Foreground="White"
+                                       TextWrapping="Wrap"/>
 
                         </StackPanel>
                     </Border>
@@ -254,27 +245,14 @@
         <!-- RIGHT SIDE MAIN AREA -->
         <Grid Grid.Column="1">
 
-            <!-- Create rows -->
             <Grid.RowDefinitions>
-
-                <!-- Header -->
                 <RowDefinition Height="Auto"/>
-
-                <!-- ASCII logo -->
                 <RowDefinition Height="Auto"/>
-
-                <!-- Chat area -->
                 <RowDefinition Height="*"/>
-
-                <!-- Quiz panel -->
                 <RowDefinition Height="Auto"/>
-
-                <!-- Input area -->
                 <RowDefinition Height="Auto"/>
-
             </Grid.RowDefinitions>
 
-            <!-- Main title section -->
             <Border Background="#111827"
                     CornerRadius="14"
                     Padding="16"
@@ -282,14 +260,12 @@
 
                 <StackPanel>
 
-                    <!-- Main chatbot title -->
                     <TextBlock Text="CYBERSECURITY AWARENESS CHATBOT"
                                Foreground="#22D3EE"
                                FontSize="26"
                                FontWeight="Bold"
                                HorizontalAlignment="Center"/>
 
-                    <!-- Subtitle -->
                     <TextBlock Text="South Africa Edition"
                                Foreground="White"
                                FontSize="14"
@@ -299,7 +275,6 @@
                 </StackPanel>
             </Border>
 
-            <!-- ASCII art banner -->
             <Border Grid.Row="1"
                     Margin="0,10,0,10"
                     Background="#1E293B"
@@ -309,7 +284,6 @@
 
                 <StackPanel>
 
-                    <!-- ASCII art lines -->
                     <TextBlock FontFamily="Consolas"
                                Foreground="#67E8F9"
                                FontSize="13"
@@ -349,23 +323,65 @@
                 </StackPanel>
             </Border>
 
-            <!-- Chat display area -->
+            <!-- Chat and Task Table Area -->
             <Border Grid.Row="2"
                     Background="#111827"
                     CornerRadius="14"
                     Padding="14">
 
-                <!-- Allows scrolling through chat -->
-                <ScrollViewer x:Name="ChatScrollViewer"
-                              VerticalScrollBarVisibility="Auto">
+                <Grid>
 
-                    <!-- Chat messages appear here -->
-                    <StackPanel x:Name="ChatPanel"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="170"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                </ScrollViewer>
+                    <DataGrid x:Name="TaskDataGrid"
+                              Grid.Row="0"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              SelectionMode="Single"
+                              Background="#1E293B"
+                              Foreground="White"
+                              RowBackground="#1E293B"
+                              AlternatingRowBackground="#0F172A"
+                              BorderThickness="0"
+                              HeadersVisibility="Column">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID"
+                                                Binding="{Binding Id}"
+                                                Width="50"/>
+
+                            <DataGridTextColumn Header="Title"
+                                                Binding="{Binding Title}"
+                                                Width="180"/>
+
+                            <DataGridTextColumn Header="Description"
+                                                Binding="{Binding Description}"
+                                                Width="*"/>
+
+                            <DataGridTextColumn Header="Reminder"
+                                                Binding="{Binding ReminderDate, StringFormat=yyyy-MM-dd}"
+                                                Width="130"/>
+
+                            <DataGridCheckBoxColumn Header="Done"
+                                                    Binding="{Binding IsCompleted}"
+                                                    Width="80"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <ScrollViewer x:Name="ChatScrollViewer"
+                                  Grid.Row="2"
+                                  VerticalScrollBarVisibility="Auto">
+
+                        <StackPanel x:Name="ChatPanel"/>
+
+                    </ScrollViewer>
+                </Grid>
             </Border>
 
-            <!-- Quiz panel -->
             <Border Grid.Row="3"
                     Margin="0,10,0,10"
                     Background="#1E293B"
@@ -374,7 +390,6 @@
 
                 <StackPanel>
 
-                    <!-- Quiz question -->
                     <TextBlock x:Name="QuizQuestionText"
                                Foreground="White"
                                FontSize="15"
@@ -382,7 +397,6 @@
                                Text="Quiz panel will appear here when the quiz starts."
                                TextWrapping="Wrap"/>
 
-                    <!-- Quiz answer buttons -->
                     <WrapPanel Margin="0,10,0,0">
 
                         <Button x:Name="QuizOption1"
@@ -417,24 +431,14 @@
                 </StackPanel>
             </Border>
 
-            <!-- Bottom input area -->
             <Grid Grid.Row="4">
 
-                <!-- Input columns -->
                 <Grid.ColumnDefinitions>
-
-                    <!-- User textbox -->
                     <ColumnDefinition Width="*"/>
-
-                    <!-- Small space -->
                     <ColumnDefinition Width="10"/>
-
-                    <!-- Send button -->
                     <ColumnDefinition Width="130"/>
-
                 </Grid.ColumnDefinitions>
 
-                <!-- User input textbox -->
                 <TextBox x:Name="UserInput"
                          Grid.Column="0"
                          Height="44"
@@ -443,7 +447,6 @@
                          VerticalContentAlignment="Center"
                          KeyDown="UserInput_KeyDown"/>
 
-                <!-- Send message button -->
                 <Button Content="Send"
                         Grid.Column="2"
                         Height="44"
