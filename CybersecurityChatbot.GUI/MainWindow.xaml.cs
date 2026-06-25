@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,55 +10,47 @@ using CybersecurityChatbot.Services;
 namespace CybersecurityChatbot.GUI
 {
     // This is the main window of the WPF chatbot application.
-    // It connects the GUI buttons, chatbot logic, database, quiz, tasks, and activity log together.
     public partial class MainWindow : Window
     {
-        // These are the services that handle different parts of the app
-        private readonly ChatbotService _chatbotService;      // Handles chat responses
-        private readonly DatabaseService _databaseService;    // Handles database operations
-        private readonly ActivityLogService _activityLogService; // Tracks user actions
-        private readonly QuizService _quizService;            // Handles quiz functionality
+        private readonly ChatbotService _chatbotService;
+        private readonly DatabaseService _databaseService;
+        private readonly ActivityLogService _activityLogService;
+        private readonly QuizService _quizService;
 
-        // Track the current user and any pending reminder tasks
         private User _currentUser;
-        private TaskItem? _pendingReminderTask;    // Stores a task waiting for reminder confirmation
-        private int? _pendingReminderTaskId;       // Stores the ID of pending task
+        private TaskItem? _pendingReminderTask;
+        private int? _pendingReminderTaskId;
 
-        // Constructor - runs when the window first opens
         public MainWindow()
         {
-            InitializeComponent(); // Loads the XAML design
+            InitializeComponent();
 
-            // Create instances of all the services
             _chatbotService = new ChatbotService();
             _databaseService = new DatabaseService();
             _activityLogService = new ActivityLogService();
             _quizService = new QuizService();
 
-            // Create a default guest user
             _currentUser = new User("Guest");
             _chatbotService.SetUser(_currentUser);
 
-            SetQuizButtonsVisibility(false); // Hide quiz buttons until quiz starts
-            PlayGreeting(); // Play welcome sound
+            SetQuizButtonsVisibility(false);
+            PlayGreeting();
 
-            // Check if database is working
             if (_databaseService.EnsureDatabaseSetup())
             {
                 AppendBotMessage("Database connection successful.");
                 _activityLogService.Add("Database", "Connected to MySQL and verified task table.");
+                RefreshTaskGrid();
             }
             else
             {
                 AppendBotMessage("Database setup could not be completed yet. Please update the MySQL connection string in DatabaseService.cs.");
             }
 
-            // Welcome messages
             AppendBotMessage("Hello! Welcome to the Cybersecurity Awareness Bot.");
             AppendBotMessage("You can chat, manage tasks, start a quiz, or ask for the activity log.");
         }
 
-        // Allows user to drag the window by clicking on the header
         private void HeaderBorder_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ButtonState == MouseButtonState.Pressed)
@@ -68,7 +59,6 @@ namespace CybersecurityChatbot.GUI
             }
         }
 
-        // Plays greeting sound when app starts
         private void PlayGreeting()
         {
             try
@@ -94,19 +84,16 @@ namespace CybersecurityChatbot.GUI
             }
         }
 
-        // Sets the user's name when they click the "Set Name" button
         private void SetName_Click(object sender, RoutedEventArgs e)
         {
             string name = NameInput.Text.Trim();
 
-            // Validate the name (must be at least 2 characters)
             if (string.IsNullOrWhiteSpace(name) || name.Length < 2)
             {
                 AppendBotMessage("Please enter a valid name with at least 2 characters.");
                 return;
             }
 
-            // Create new user with the entered name
             _currentUser = new User(name);
             _chatbotService.SetUser(_currentUser);
 
@@ -114,22 +101,19 @@ namespace CybersecurityChatbot.GUI
             _activityLogService.Add("User", $"User name set to {name}.");
         }
 
-                    // This method allows the user to press Enter to set their name
-            private void NameInput_KeyDown(object sender, KeyEventArgs e)
+        private void NameInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
             {
-                if (e.Key == Key.Enter)
-                {
-                    SetName_Click(sender, e);
-                }
+                SetName_Click(sender, e);
             }
+        }
 
-        // Handles clicking the Send button
         private void Send_Click(object sender, RoutedEventArgs e)
         {
             ProcessInput();
         }
 
-        // Handles pressing Enter key to send message
         private void UserInput_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -138,7 +122,6 @@ namespace CybersecurityChatbot.GUI
             }
         }
 
-        // Handles clicking on quick topic buttons
         private void QuickTopic_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button)
@@ -148,7 +131,6 @@ namespace CybersecurityChatbot.GUI
             }
         }
 
-        // Main method that processes user input and decides what to do
         private void ProcessInput()
         {
             string input = UserInput.Text.Trim();
@@ -159,12 +141,10 @@ namespace CybersecurityChatbot.GUI
                 return;
             }
 
-            // Track user activity
             _currentUser.IncrementMessageCount();
             AppendUserMessage(input);
             _activityLogService.Add("Chat", $"User entered: {input}");
 
-            // Check if we're waiting for a reminder follow-up
             if (_pendingReminderTask != null && TryHandleReminderFollowUp(input))
             {
                 UserInput.Clear();
@@ -172,10 +152,8 @@ namespace CybersecurityChatbot.GUI
                 return;
             }
 
-            // Figure out what the user wants (intent detection)
             string intent = _chatbotService.DetectIntent(input);
 
-            // Handle different intents
             switch (intent)
             {
                 case "start_quiz":
@@ -205,12 +183,10 @@ namespace CybersecurityChatbot.GUI
                     break;
             }
 
-            // Clear input and refocus for next message
             UserInput.Clear();
             UserInput.Focus();
         }
 
-        // Processes task-related user input
         private void HandleTaskIntent(string input)
         {
             var task = _chatbotService.ParseTaskFromInput(input);
@@ -223,10 +199,10 @@ namespace CybersecurityChatbot.GUI
 
             try
             {
-                // If the task already has a reminder date, save it directly
                 if (task.ReminderDate.HasValue)
                 {
-                    int taskId = _databaseService.AddTask(task);
+                    _databaseService.AddTask(task);
+                    RefreshTaskGrid();
 
                     AppendBotMessage($"Task added: {task.Title}. Reminder set for {task.ReminderDate:yyyy-MM-dd}.");
                     _activityLogService.Add("Task", $"Task added: {task.Title}");
@@ -237,8 +213,8 @@ namespace CybersecurityChatbot.GUI
                     return;
                 }
 
-                // If no reminder date, save task and ask if user wants a reminder
                 int newTaskId = _databaseService.AddTask(task);
+                RefreshTaskGrid();
 
                 _pendingReminderTask = task;
                 _pendingReminderTaskId = newTaskId;
@@ -253,7 +229,6 @@ namespace CybersecurityChatbot.GUI
             }
         }
 
-        // Handles follow-up questions about setting reminders
         private bool TryHandleReminderFollowUp(string input)
         {
             string normalized = input.Trim().ToLower();
@@ -261,7 +236,6 @@ namespace CybersecurityChatbot.GUI
             if (_pendingReminderTask == null || !_pendingReminderTaskId.HasValue)
                 return false;
 
-            // User says no to reminder
             if (normalized == "no" || normalized.Contains("no reminder"))
             {
                 AppendBotMessage("Okay, no reminder was set.");
@@ -272,14 +246,12 @@ namespace CybersecurityChatbot.GUI
                 return true;
             }
 
-            // User says yes to reminder - ask for when
             if (normalized == "yes" || normalized == "yes please")
             {
                 AppendBotMessage("Sure. Tell me when to remind you, for example: 'tomorrow' or 'in 3 days'.");
                 return true;
             }
 
-            // Parse reminder date from user input
             DateTime? reminderDate = null;
 
             if (normalized.Contains("tomorrow"))
@@ -297,10 +269,10 @@ namespace CybersecurityChatbot.GUI
             else if (normalized.Contains("in 7 days"))
                 reminderDate = DateTime.Now.Date.AddDays(7);
 
-            // If we got a valid date, save the reminder
             if (reminderDate.HasValue)
             {
                 _databaseService.UpdateTaskReminder(_pendingReminderTaskId.Value, reminderDate.Value);
+                RefreshTaskGrid();
 
                 int days = Math.Max(0, (reminderDate.Value.Date - DateTime.Now.Date).Days);
 
@@ -327,73 +299,82 @@ namespace CybersecurityChatbot.GUI
             return false;
         }
 
-        // Adds a demo task when the Add Task button is clicked
         private void AddTask_Click(object sender, RoutedEventArgs e)
         {
+            string title = TaskTitleTextBox.Text.Trim();
+            string description = TaskDescriptionTextBox.Text.Trim();
+            DateTime? reminderDate = TaskReminderDatePicker.SelectedDate;
+
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                AppendBotMessage("Please enter a task title before adding the task.");
+                TaskTitleTextBox.Focus();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                AppendBotMessage("Please enter a task description before adding the task.");
+                TaskDescriptionTextBox.Focus();
+                return;
+            }
+
             var task = new TaskItem
             {
-                Title = "Enable two-factor authentication",
-                Description = "Enable two-factor authentication to add an extra layer of security.",
-                ReminderDate = DateTime.Now.AddDays(3),
+                Title = title,
+                Description = description,
+                ReminderDate = reminderDate,
                 IsCompleted = false
             };
 
             try
             {
                 _databaseService.AddTask(task);
-                AppendBotMessage("Task added successfully: Enable two-factor authentication. Reminder set for 3 days.");
-                _activityLogService.Add("Task", "Demo task added with a 3-day reminder.");
+                RefreshTaskGrid();
+
+                string reminderText = reminderDate.HasValue
+                    ? $" Reminder set for {reminderDate.Value:yyyy-MM-dd}."
+                    : " No reminder set.";
+
+                AppendBotMessage($"Task added successfully: {title}.{reminderText}");
+                _activityLogService.Add("Task", $"Task added: '{title}'.{reminderText}");
+
+                TaskTitleTextBox.Clear();
+                TaskDescriptionTextBox.Clear();
+                TaskReminderDatePicker.SelectedDate = null;
             }
             catch (Exception ex)
             {
-                AppendBotMessage("There was a problem saving the demo task.");
-                _activityLogService.Add("Error", $"Demo task save failed: {ex.Message}");
+                AppendBotMessage("There was a problem saving the task. Please check your database connection.");
+                _activityLogService.Add("Error", $"Task save failed: {ex.Message}");
             }
         }
 
-        // Shows tasks when View Tasks button is clicked
+        private void RefreshTaskGrid()
+        {
+            try
+            {
+                TaskDataGrid.ItemsSource = null;
+                TaskDataGrid.ItemsSource = _databaseService.GetTasks();
+            }
+            catch
+            {
+                // Keeps the app from crashing if database is not ready.
+            }
+        }
+
         private void ViewTasks_Click(object sender, RoutedEventArgs e)
         {
             ViewTasksInternal();
         }
 
-        // Loads and displays all saved tasks from the database
         private void ViewTasksInternal()
         {
             try
             {
-                var tasks = _databaseService.GetTasks();
-
-                if (!tasks.Any())
-                {
-                    AppendBotMessage("There are currently no tasks saved.");
-                    return;
-                }
-
-                AppendBotMessage("Here are your saved tasks:");
-
-                // Loop through each task and display its information
-                foreach (var task in tasks)
-                {
-                    string reminderText = task.ReminderDate.HasValue
-                        ? task.ReminderDate.Value.ToString("yyyy-MM-dd")
-                        : "No reminder";
-
-                    // Converts the database true/false value into clear words for the user
-                    string statusText = task.IsCompleted
-                        ? "✅ Task Completed"
-                        : "❌ Task Not Completed";
-
-                    AppendBotMessage(
-                        $"Task #{task.Id}\n" +
-                        $"Title: {task.Title}\n" +
-                        $"Description: {task.Description}\n" +
-                        $"Reminder: {reminderText}\n" +
-                        $"Status: {statusText}"
-                    );
-                }
-
-                _activityLogService.Add("Task", "Viewed saved tasks with completion status.");
+                RefreshTaskGrid();
+                AppendBotMessage("Tasks loaded. Select a task from the table to complete or delete.");
+                _activityLogService.Add("Task", "Viewed saved tasks.");
             }
             catch (Exception ex)
             {
@@ -402,18 +383,32 @@ namespace CybersecurityChatbot.GUI
             }
         }
 
-        // Marks a task as completed
+        private bool TryGetSelectedTaskId(out int taskId)
+        {
+            taskId = 0;
+
+            if (TaskDataGrid.SelectedItem is TaskItem selectedTask)
+            {
+                taskId = selectedTask.Id;
+                return true;
+            }
+
+            return false;
+        }
+
         private void MarkTaskComplete_Click(object sender, RoutedEventArgs e)
         {
-            if (!TryGetTaskId(out int taskId))
+            if (!TryGetSelectedTaskId(out int taskId))
             {
-                AppendBotMessage("Please enter a valid numeric Task ID.");
+                AppendBotMessage("Please select a task from the table first.");
                 return;
             }
 
             try
             {
                 _databaseService.MarkTaskCompleted(taskId);
+                RefreshTaskGrid();
+
                 AppendBotMessage($"✅ Task #{taskId} marked as completed.");
                 _activityLogService.Add("Task", $"Task #{taskId} marked as completed.");
             }
@@ -424,18 +419,19 @@ namespace CybersecurityChatbot.GUI
             }
         }
 
-        // Deletes a task
         private void DeleteTask_Click(object sender, RoutedEventArgs e)
         {
-            if (!TryGetTaskId(out int taskId))
+            if (!TryGetSelectedTaskId(out int taskId))
             {
-                AppendBotMessage("Please enter a valid numeric Task ID.");
+                AppendBotMessage("Please select a task from the table first.");
                 return;
             }
 
             try
             {
                 _databaseService.DeleteTask(taskId);
+                RefreshTaskGrid();
+
                 AppendBotMessage($"🗑️ Task #{taskId} deleted successfully.");
                 _activityLogService.Add("Task", $"Task #{taskId} deleted.");
             }
@@ -446,19 +442,11 @@ namespace CybersecurityChatbot.GUI
             }
         }
 
-        // Gets the task ID from the text box
-        private bool TryGetTaskId(out int taskId)
-        {
-            return int.TryParse(TaskIdTextBox.Text.Trim(), out taskId);
-        }
-
-        // Starts the quiz when button is clicked
         private void StartQuiz_Click(object sender, RoutedEventArgs e)
         {
             StartQuizInternal();
         }
 
-        // Internal method to start the quiz
         private void StartQuizInternal()
         {
             _quizService.StartQuiz();
@@ -468,13 +456,11 @@ namespace CybersecurityChatbot.GUI
             ShowCurrentQuizQuestion();
         }
 
-        // Quits the quiz
         private void QuitQuiz_Click(object sender, RoutedEventArgs e)
         {
             QuitQuiz();
         }
 
-        // Internal method to quit the quiz
         private void QuitQuiz()
         {
             if (_quizService.IsQuizActive)
@@ -491,7 +477,6 @@ namespace CybersecurityChatbot.GUI
             }
         }
 
-        // Displays the current quiz question
         private void ShowCurrentQuizQuestion()
         {
             var question = _quizService.GetCurrentQuestion();
@@ -503,29 +488,24 @@ namespace CybersecurityChatbot.GUI
                 return;
             }
 
-            // Show question text
             QuizQuestionText.Text = $"Question {_quizService.GetQuestionNumber()} of {_quizService.GetTotalQuestions()}:\n{question.QuestionText}";
 
-            // Set option button text
             QuizOption1.Content = question.Options.Count > 0 ? question.Options[0] : "";
             QuizOption2.Content = question.Options.Count > 1 ? question.Options[1] : "";
             QuizOption3.Content = question.Options.Count > 2 ? question.Options[2] : "";
             QuizOption4.Content = question.Options.Count > 3 ? question.Options[3] : "";
 
-            // Store option index in button's Tag property
             QuizOption1.Tag = 0;
             QuizOption2.Tag = 1;
             QuizOption3.Tag = 2;
             QuizOption4.Tag = 3;
 
-            // Hide buttons that don't have options
             QuizOption1.Visibility = question.Options.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
             QuizOption2.Visibility = question.Options.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
             QuizOption3.Visibility = question.Options.Count > 2 ? Visibility.Visible : Visibility.Collapsed;
             QuizOption4.Visibility = question.Options.Count > 3 ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        // Handles clicking a quiz answer button
         private void QuizOption_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is int optionIndex)
@@ -536,7 +516,7 @@ namespace CybersecurityChatbot.GUI
 
                 if (_quizService.IsQuizActive)
                 {
-                    ShowCurrentQuizQuestion(); // Show next question
+                    ShowCurrentQuizQuestion();
                 }
                 else
                 {
@@ -547,7 +527,6 @@ namespace CybersecurityChatbot.GUI
             }
         }
 
-        // Shows or hides the quiz buttons
         private void SetQuizButtonsVisibility(bool visible)
         {
             var state = visible ? Visibility.Visible : Visibility.Collapsed;
@@ -557,20 +536,17 @@ namespace CybersecurityChatbot.GUI
             QuizOption4.Visibility = state;
         }
 
-        // Shows what the bot remembers about the user
         private void ShowMemory_Click(object sender, RoutedEventArgs e)
         {
             AppendBotMessage(_chatbotService.GetResponse("what do you remember"));
             _activityLogService.Add("Memory", "Displayed remembered user information.");
         }
 
-        // Shows the activity log
         private void ShowActivityLog_Click(object sender, RoutedEventArgs e)
         {
             ShowActivityLogInternal();
         }
 
-        // Internal method to show activity log
         private void ShowActivityLogInternal()
         {
             if (!_activityLogService.HasEntries())
@@ -587,7 +563,6 @@ namespace CybersecurityChatbot.GUI
             }
         }
 
-        // Clears all messages from the chat
         private void ClearChat_Click(object sender, RoutedEventArgs e)
         {
             ChatPanel.Children.Clear();
@@ -595,28 +570,25 @@ namespace CybersecurityChatbot.GUI
             _activityLogService.Add("UI", "Chat cleared.");
         }
 
-        // Adds a user message to the chat display
         private void AppendUserMessage(string message)
         {
             ChatPanel.Children.Add(CreateMessageBubble($"{_currentUser.Name}: {message}", false));
             ScrollToBottom();
         }
 
-        // Adds a bot message to the chat display
         private void AppendBotMessage(string message)
         {
             ChatPanel.Children.Add(CreateMessageBubble($"BOT: {message}", true));
             ScrollToBottom();
         }
 
-        // Creates a styled message bubble for chat display
         private Border CreateMessageBubble(string text, bool isBot)
         {
             return new Border
             {
                 Background = isBot
-                    ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1E293B"))  // Dark blue-gray for bot
-                    : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0F766E")), // Teal for user
+                    ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1E293B"))
+                    : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0F766E")),
                 CornerRadius = new CornerRadius(12),
                 Padding = new Thickness(12),
                 Margin = new Thickness(0, 0, 0, 10),
@@ -632,7 +604,6 @@ namespace CybersecurityChatbot.GUI
             };
         }
 
-        // Scrolls the chat view to show the newest message
         private void ScrollToBottom()
         {
             ChatScrollViewer.ScrollToEnd();
