@@ -151,6 +151,19 @@ This project uses GitHub Actions on Windows to restore and build the WPF project
 - `v2.0 - Final Cybersecurity Awareness Chatbot POE`
 - `v2.1 - Custom Task Manager Window Update`
 
+#  Screenshots
+
+### Interface
+<img src="Screenshots/interface.png" width="900">
+
+### Quiz Mini Game
+<img src="Screenshots/quizgame.png" width="900">
+
+### Task Manager
+<img src="Screenshots/viewtask.png" width="900">
+
+### Databasase (SQL)
+<img src="Screenshots/database.png" width="900">
 
 ## License
 This project is for educational purposes only.
