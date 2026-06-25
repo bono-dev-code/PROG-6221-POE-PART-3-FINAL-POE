@@ -3,10 +3,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Task Manager"
         Height="500"
-        Width="850"
+        Width="900"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"
         Background="#0F172A">
+
+    <Window.Resources>
+
+        <Style x:Key="DataGridHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#06B6D4"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+    </Window.Resources>
 
     <Grid Margin="16">
 
@@ -27,18 +40,35 @@
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
                   SelectionMode="Single"
+                  HeadersVisibility="Column"
+                  ColumnHeaderStyle="{StaticResource DataGridHeaderStyle}"
                   Background="#1E293B"
                   Foreground="White"
                   RowBackground="#1E293B"
                   AlternatingRowBackground="#0F172A"
-                  BorderThickness="0">
+                  BorderThickness="0"
+                  GridLinesVisibility="Horizontal">
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
-                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="180"/>
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
-                <DataGridTextColumn Header="Reminder" Binding="{Binding ReminderDate, StringFormat=yyyy-MM-dd}" Width="130"/>
-                <DataGridCheckBoxColumn Header="Done" Binding="{Binding IsCompleted}" Width="80"/>
+                <DataGridTextColumn Header="ID"
+                                    Binding="{Binding Id}"
+                                    Width="60"/>
+
+                <DataGridTextColumn Header="Task Title"
+                                    Binding="{Binding Title}"
+                                    Width="220"/>
+
+                <DataGridTextColumn Header="Description"
+                                    Binding="{Binding Description}"
+                                    Width="*"/>
+
+                <DataGridTextColumn Header="Reminder Date"
+                                    Binding="{Binding ReminderDate, StringFormat=yyyy-MM-dd}"
+                                    Width="150"/>
+
+                <DataGridCheckBoxColumn Header="Completed"
+                                        Binding="{Binding IsCompleted}"
+                                        Width="100"/>
             </DataGrid.Columns>
         </DataGrid>
 
