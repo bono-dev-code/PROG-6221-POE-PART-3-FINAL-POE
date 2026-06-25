@@ -141,7 +141,7 @@
                              Margin="0,0,0,8"
                              ToolTip="Write what the user must do"/>
 
-                    <TextBlock Text="Reminder Date Optional"
+                    <TextBlock Text="Reminder Date"
                                Foreground="White"
                                Margin="0,0,0,6"/>
 
