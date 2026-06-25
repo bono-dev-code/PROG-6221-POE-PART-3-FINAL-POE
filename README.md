@@ -82,6 +82,8 @@ CybersecurityChatbot-Part3/
 │   ├── Resources/
 │   ├── MainWindow.xaml
 │   ├── MainWindow.xaml.cs
+│   ├── TaskManagerWindow.xaml
+│   ├── TaskManagerWindow.xaml.cs
 │   ├── App.xaml
 │   ├── App.xaml.cs
 │   └── CybersecurityChatbot.GUI.csproj
@@ -147,6 +149,7 @@ This project uses GitHub Actions on Windows to restore and build the WPF project
 - `v1.0 - Task Assistant Implementation`
 - `v1.5 - Database and Quiz Features`
 - `v2.0 - Final Cybersecurity Awareness Chatbot POE`
+- `v2.1 - Custom Task Manager Window Update`
 
 
 ## License
