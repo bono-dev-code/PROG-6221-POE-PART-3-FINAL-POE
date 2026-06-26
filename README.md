@@ -92,6 +92,7 @@ CybersecurityChatbot-Part3/
 ├── .github/
 │   └── workflows/
 │       └── dotnet.yml
+├── Screenshots/
 └── README.md
 ```
 
